@@ -1,5 +1,5 @@
 -- ============================================================
--- SMKS YP 17 Cilegon - MySQL schema and seed data
+-- SMKS YP 17 Cilegon - MySQL schema, seed data, admin account
 -- Target: MySQL 5.7+ / MariaDB 10.3+ (cPanel default)
 --
 -- How to use:
@@ -7,14 +7,13 @@
 --      user ALL privileges on that database.
 --   2. Open phpMyAdmin, select the database, and import this file
 --      (or paste it into the SQL tab).
---   3. Create the admin account (see the bottom of this file).
+--   3. Change the default admin password after the first login.
 --
--- This script is safe to re-run: it uses CREATE TABLE IF NOT EXISTS
--- and INSERT IGNORE, so existing data is not dropped.
+-- Re-running this file is safe: tables use IF NOT EXISTS and seed rows
+-- use INSERT IGNORE, so existing data is not dropped.
 -- ============================================================
 
 SET NAMES utf8mb4;
-SET time_zone = '+07:00';
 
 -- ------------------------------------------------------------
 -- Users (admin accounts)
@@ -84,20 +83,13 @@ INSERT IGNORE INTO category (id, name, slug, description) VALUES
     ('0b6f1c2e-6a1d-4f7e-9a51-1f3c2d8e0005', 'Ekstrakurikuler', 'ekstrakurikuler', 'Kegiatan ekstrakurikuler');
 
 -- ------------------------------------------------------------
--- Admin account
--- The password must be hashed with PHP's password_hash() (bcrypt).
--- Do NOT store a plain-text password here. Use the CLI script
--- create_admin.php (in the php-app folder) to create the first admin:
---
---     php create_admin.php "Administrator" admin@smkyp17.sch.id "YourStrongPassword"
---
--- Alternatively, generate a hash with PHP and insert it manually:
---
+-- Seed data: initial admin account
+-- Email:    admin@smkyp17.sch.id
+-- Password: admin12345   (CHANGE THIS after first login)
+-- The hash is a bcrypt hash created the same way as PHP password_hash().
+-- To create a different password, run this in a terminal and replace the hash:
 --     php -r "echo password_hash('YourStrongPassword', PASSWORD_BCRYPT), PHP_EOL;"
---
--- and then run (replace the placeholder hash):
---
---     INSERT INTO users (id, name, email, password_hash, role)
---     VALUES (UUID(), 'Administrator', 'admin@smkyp17.sch.id',
---             '<PASTE_BCRYPT_HASH_HERE>', 'admin');
 -- ------------------------------------------------------------
+INSERT IGNORE INTO users (id, name, email, password_hash, role) VALUES
+    ('7c1d2e3f-4a5b-4c6d-8e7f-9a0b1c2d3e4f', 'Administrator', 'admin@smkyp17.sch.id',
+     '$2y$10$OwKHuuam9QebB5xcPtdumeilBrEcesa3y0e4142jMiczdvzIGDA8.', 'admin');
